@@ -1,0 +1,72 @@
+import json
+import os
+# open the file where there are jsons of the picture
+#Author: Muhammad Sufiyan Sadiq
+
+# add your path to your json files here
+folder_path = "../path/to/your/json/file"
+target_path = "../path/to/your/txt/file"
+
+Jsons_list = os.listdir(folder_path)
+number_of_jsons = len(Jsons_list)
+
+
+number_of_classes = 5
+
+# user-defined class mapping
+class_mapping = {
+    'cat': 0,
+    'dog': 1
+    # Add more classes as needed
+}
+
+
+for i in range(number_of_jsons):
+    new_path  = os.path.join(folder_path, Jsons_list[i])
+    with open(new_path, 'r') as json_file:
+        data = json.load(json_file)
+        
+        # find the length and width of the image
+        height = data["imageHeight"]
+        width = data["imageWidth"]
+
+        yolo_format_string = ""        
+        number_of_boxes = len(data["shapes"])
+        for i in range(number_of_boxes):
+            box_data = data["shapes"][i]
+            # getting the class id
+            try:
+                Class = class_mapping[box_data["label"]]    
+            
+            except:
+                print("Unknown class found please add this class in your python file and try again")
+                break
+            
+            # get the points array
+            points_array = box_data["points"]
+            
+            # get the points from the array
+            x_coordinate1 = points_array[0][0]
+            x_coordinate2 = points_array[1][0]
+            y_coordinate1 = points_array[0][1]
+            y_coordinate2 = points_array[1][1]
+            
+            # get the box width and height
+            box_height = (y_coordinate2 -y_coordinate1) / height
+            box_width = (x_coordinate2 - x_coordinate1) / width
+            
+            x_center = (x_coordinate1 + (x_coordinate2 - x_coordinate1) / 2) / width
+            y_center = (y_coordinate1 + (y_coordinate2 - y_coordinate1) / 2) / height
+            
+            yolo_format_string  = yolo_format_string + f"{Class} {x_center} {y_center} {box_width} {box_height}\n"
+            # end of for loop
+        
+        yolo_format_string = yolo_format_string.rstrip('\n')
+        
+        
+        file_name = data["imagePath"]
+        file_name= os.path.basename(file_name)
+        file_name = os.path.splitext(file_name)[0] + '.txt'
+        target_file_path = os.path.join(target_path, file_name)
+        with open(target_file_path, 'w') as writeFile:
+            writeFile.write(yolo_format_string)
