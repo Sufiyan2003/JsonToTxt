@@ -4,8 +4,8 @@ import os
 #Author: Muhammad Sufiyan Sadiq
 
 # add your path to your json files here
-main_folder_path = "C:/Users/Fahad/Desktop/python Code/jsonToTxt/jsons"
-main_target_path = "C:/Users/Fahad/Desktop/python Code/jsonToTxt/text"
+main_folder_path = "C:/add/your/path/here/jsonToTxt/jsons"
+main_target_path = "C:/add/your/path/here/jsonToTxt/text"
 
 
 # user-defined class mapping
