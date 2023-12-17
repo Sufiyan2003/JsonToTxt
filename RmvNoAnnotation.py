@@ -2,10 +2,10 @@ import os
 
 
 # this path contains the bigger set of files which we need to filter
-path = "C:/Users/RA/Desktop/python/target"
+path = "/path/to/target"
 
 # this contais the files that are to remain
-to_remain = "C:/Users/RA/Desktop/python/lookup"
+to_remain = "/path/to/lookup"
 
 
 # need to check if the name is present in that file or not
