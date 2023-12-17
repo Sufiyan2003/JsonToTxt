@@ -1,33 +1,29 @@
 import os
 
-
-# This is to remove any file extension in case you want to use it for any type of file
-# if you want to filter out files of different types then you will need to edit this code
 def RemoveFileExtension(FileName):
-    position = FileName.find('.')
-    OnlyFileName = FileName[:position]
+    position = FileName.rfind('.')
+    if position != -1:
+        OnlyFileName = FileName[:position]
+    else:
+        OnlyFileName = FileName
     return OnlyFileName
 
-
 def RemoveFileExtensionForArray(FileArray):
-    for i in range(len(FileArray)):
-        FileArray[i] = RemoveFileExtension(FileArray[i])
-    return FileArray
+    return [RemoveFileExtension(file) for file in FileArray]
 
-# this path contains the bigger set of files which we need to filter
 path = "path/to/target"
-
-# this contais the files that are to remain
 to_remain = "path/to/lookup"
 
+target_files = os.listdir(path)
+lookup_files = os.listdir(to_remain)
 
-# need to check if the name is present in that file or not
-target_files = RemoveFileExtensionForArray(os.listdir(path))
-lookup_files = RemoveFileExtensionForArray(os.listdir(to_remain))
+count = 0
 
 for i in range(len(target_files)):
-    check_file = (target_files[i])
-    print(check_file)
-    if check_file not in lookup_files:
+    check_file = target_files[i]
+    if RemoveFileExtension(check_file) not in RemoveFileExtensionForArray(lookup_files):
+        count = count + 1
         path_to_file = os.path.join(path, check_file)
         os.remove(path_to_file)
+
+print(f"Total files without JSON: {count}")
